@@ -1,0 +1,2 @@
+model_checkpoint_path: "ae_dec_400_100_10_2"
+all_model_checkpoint_paths: "ae_dec_400_100_10_2"
