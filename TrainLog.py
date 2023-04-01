@@ -32,46 +32,52 @@ class TrainLog(tf.keras.callbacks.Callback):
     def predict_examples(self):
         test_imgs = self.autoencoder.predict(self.train_samples)
 
-        n = 10  # How many digits we will display
+        n = 20  # How many digits we will display
+        img_size=0.25
         plt.clf()
         plt.cla()
-        plt.figure(figsize=(20, 4))
+        plt.figure(figsize=(n*img_size, 2*img_size))
         for i in range(n):
             # Display original
             ax = plt.subplot(2, n, i + 1)
-            plt.imshow(self.train_samples[i].reshape(28, 28))
-            plt.gray()
+            plt.imshow(self.train_samples[i].reshape(28, 28), cmap='GnBu')
             ax.get_xaxis().set_visible(False)
             ax.get_yaxis().set_visible(False)
 
             # Display reconstruction
             ax = plt.subplot(2, n, i + 1 + n)
-            plt.imshow(test_imgs[i].reshape(28, 28))
-            plt.gray()
+            plt.imshow(test_imgs[i].reshape(28, 28), cmap='GnBu')
             ax.get_xaxis().set_visible(False)
             ax.get_yaxis().set_visible(False)
+        
+        plt.tight_layout(pad=0.0)
+
         plt.savefig("./out/samples{x}.png".format(x=self.loop), dpi=96)
 
     def map_encoder(self):
-        n = 10
+        n = 20  # How many digits we will display
+        img_size=0.25
+
         r = np.linspace(-1, 1, n)
         l = np.meshgrid(r, r)
-        l = np.reshape(l, [100, 2])
+        l = np.reshape(l, [n*n, 2])
 
         imgs = self.autoencoder.decode(l)
         plt.clf()
         plt.cla()
-        plt.figure(figsize=(20, 20))
+        plt.figure(figsize=(n*img_size, n*img_size))
         x = 0
         for r in range(n):
             for c in range(n):
                 ax = plt.subplot(n, n, x + 1)
-                plt.imshow(imgs[x].reshape(28, 28))
-                plt.gray()
+                plt.imshow(imgs[x].reshape(28, 28), cmap='GnBu')
+                #plt.gray()
                 ax.get_xaxis().set_visible(False)
                 ax.get_yaxis().set_visible(False)
                 x = x+1
 
+        plt.subplots_adjust(left=None, bottom=None, right=None, wspace=None, hspace=None)
+        plt.tight_layout(pad=0.0)
         plt.savefig("./out/dec_map{x}.png".format(x=self.loop), dpi=96)
         pass
 

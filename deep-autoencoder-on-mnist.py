@@ -10,7 +10,7 @@ from tensorflow.keras.datasets import mnist
 import TrainLog as tl
 import AutoEncoder as ae
 
-epochs_count = 100
+epochs_count = 120
 batch_size = 128
 
 input_dim = 28*28
@@ -30,20 +30,20 @@ autoencoder.compile(loss='binary_crossentropy', optimizer='adam')
 
 
 cb = tl.TrainLog(autoencoder, train_samples, train_responses)
-# history = autoencoder.fit(train_samples, train_samples, epochs=epochs_count, batch_size=batch_size,
-#                           shuffle=True, validation_data=(test_samples, test_samples),
-#                           callbacks=[cb])
+history = autoencoder.fit(train_samples, train_samples, epochs=epochs_count, batch_size=batch_size,
+                          shuffle=True, validation_data=(test_samples, test_samples),
+                          callbacks=[cb])
 
-# plt.clf()
-# plt.cla()
-# plt.figure(figsize=(6, 6))
-# plt.plot(history.history['loss'], label='Train')
-# plt.plot(history.history['val_loss'], label='Validation')
-# plt.ylabel('Cross Entropy Loss')
-# plt.xlabel('Epochs')
-# plt.title('Learning Loss Curve', pad=13)
-# plt.legend(loc='upper right')
-# plt.savefig('./out/loss.svg')
+plt.clf()
+plt.cla()
+plt.figure(figsize=(6, 6))
+plt.plot(history.history['loss'], label='Train')
+plt.plot(history.history['val_loss'], label='Validation')
+plt.ylabel('Cross Entropy Loss')
+plt.xlabel('Epochs')
+plt.title('Learning Loss Curve', pad=13)
+plt.legend(loc='upper right')
+plt.savefig('./out/loss.svg')
 
 cb.pack_gif('./out/dec_map{x}.png', './out/dec_map.gif', epochs_count)
 cb.pack_gif('./out/latent{x}.png', './out/latent.gif', epochs_count)
