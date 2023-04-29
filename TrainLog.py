@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import imageio
 import numpy as np
 from tensorflow.python.ops.numpy_ops import np_config
-import AutoEncoder
+import ae
 
 class TrainLog(tf.keras.callbacks.Callback):
     def __init__(self, autoencoder, train_samples, train_responses):
@@ -26,8 +26,9 @@ class TrainLog(tf.keras.callbacks.Callback):
         plt.figure(figsize=(5, 5))
         plt.scatter(npl[:,0],npl[:,1],s=20, c=npl[:,2], cmap='tab10')
         plt.colorbar()
-        plt.savefig("./out/latent{x}.svg".format(x=self.loop))
+        #plt.savefig("./out/latent{x}.svg".format(x=self.loop))
         plt.savefig("./out/latent{x}.png".format(x=self.loop), dpi=96)
+        plt.close()
 
     def predict_examples(self):
         test_imgs = self.autoencoder.predict(self.train_samples)
@@ -53,6 +54,7 @@ class TrainLog(tf.keras.callbacks.Callback):
         plt.tight_layout(pad=0.0)
 
         plt.savefig("./out/samples{x}.png".format(x=self.loop), dpi=96)
+        plt.close()
 
     def map_encoder(self):
         n = 20  # How many digits we will display
@@ -79,6 +81,7 @@ class TrainLog(tf.keras.callbacks.Callback):
         plt.subplots_adjust(left=None, bottom=None, right=None, wspace=None, hspace=None)
         plt.tight_layout(pad=0.0)
         plt.savefig("./out/dec_map{x}.png".format(x=self.loop), dpi=96)
+        plt.close()
         pass
 
     def on_epoch_end(self, epoch, logs=None):

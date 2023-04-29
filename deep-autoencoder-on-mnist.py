@@ -8,7 +8,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.datasets import mnist
 
 import TrainLog as tl
-import AutoEncoder as ae
+import ae as ae
 
 epochs_count = 120
 batch_size = 128
@@ -16,22 +16,22 @@ batch_size = 128
 input_dim = 28*28
 latent_vec_dim = 2
 
-autoencoder = ae.AutoEncoder(input_dim, latent_vec_dim)
+autoencoder = ae.VariationalAutoEncoder(input_dim, latent_vec_dim)
 
-(train_samples, train_responses), (test_samples, test_responses) = mnist.load_data()
+# (train_samples, train_responses), (test_samples, test_responses) = mnist.load_data()
 
-train_samples = train_samples.astype('float32') / 255
-train_samples = np.reshape(train_samples, (-1, 784))
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+train_samples = np.concatenate([x_train, x_test], axis=0)
+#train_samples = np.expand_dims(train_samples, -1).astype("float32") / 255
+train_samples = train_samples.astype("float32") / 255
+train_samples = train_samples.reshape([train_samples.shape[0], input_dim])
 
-test_samples = test_samples.astype('float32') / 255
-test_samples = np.reshape(test_samples, (-1, 784))
+train_responses = np.concatenate([y_train, y_test], axis=0)
 
-autoencoder.compile(loss='binary_crossentropy', optimizer='adam')
-
+autoencoder.compile(optimizer='adam')
 
 cb = tl.TrainLog(autoencoder, train_samples, train_responses)
-history = autoencoder.fit(train_samples, train_samples, epochs=epochs_count, batch_size=batch_size,
-                          shuffle=True, validation_data=(test_samples, test_samples),
+history = autoencoder.fit(train_samples, epochs=epochs_count, batch_size=batch_size,
                           callbacks=[cb])
 
 plt.clf()
