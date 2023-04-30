@@ -18,7 +18,7 @@ class TrainLog(tf.keras.callbacks.Callback):
     def map_latent(self):
         latent = self.autoencoder.encode(self.train_samples)
 
-        pl = tf.concat([latent, tf.expand_dims(tf.cast(self.train_responses, dtype=tf.float32), axis=1)], 1)
+        pl = tf.concat([latent[0], tf.expand_dims(tf.cast(self.train_responses, dtype=tf.float32), axis=1)], 1)
         npl = pl.numpy()
 
         plt.clf()
